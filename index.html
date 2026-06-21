@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صانع السير الذاتية الاحترافي متعدد اللغات | Multi-Language CV Builder</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #6366f1;
+            border-radius: 10px;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: #1e293b !important;
+            }
+            header, section:first-of-type, footer, .no-print, .lang-container {
+                display: none !important;
+            }
+            main {
+                display: block !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #cvPreview {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                min-height: auto !important;
+                color: #1e293b !important;
+                background: white !important;
+            }
+            .blur-3xl {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col justify-between p-4 md:p-8 selection:bg-indigo-500 selection:text-white">
+
+    <div class="no-print max-w-7xl mx-auto w-full flex flex-wrap justify-between items-center gap-4 mb-6 animate__animated animate__fadeIn">
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-400 flex items-center gap-1">🌐 <span id="lblSelectLang">اختر لغة النظام والـ CV:</span></span>
+        </div>
+        <div class="flex flex-wrap gap-2 lang-container">
+            <button onclick="changeLanguage('ar')" class="bg-indigo-600 text-white font-medium py-1.5 px-4 rounded-xl border border-indigo-500 shadow-sm transition-all cursor-pointer lang-btn" id="btn-ar">العربية</button>
+            <button onclick="changeLanguage('en')" class="bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn" id="btn-en">English</button>
+            <button onclick="changeLanguage('fr')" class="bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn" id="btn-fr">Français</button>
+            <button onclick="changeLanguage('de')" class="bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn" id="btn-de">Deutsch</button>
+            <button onclick="changeLanguage('es')" class="bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn" id="btn-es">Español</button>
+            <button onclick="changeLanguage('it')" class="bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn" id="btn-it">Italiano</button>
+        </div>
+    </div>
+
+    <header class="text-center mb-8 animate__animated animate__fadeInDown">
+        <h1 id="mainTitle" class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-sm">
+            صانع السير الذاتية المطور العالمي
+        </h1>
+        <p id="mainSub" class="text-slate-400 mt-2 text-sm md:text-base">تغيير كامل للمحتوى والأمثلة المقترحة لـ 6 لغات عالمية فوراً</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-start flex-grow">
+        
+        <section class="bg-slate-900/60 backdrop-blur-xl border border-slate-800 p-6 rounded-2xl shadow-2xl animate__animated animate__fadeInLeft">
+            <h2 id="sectionTitleForm" class="text-xl font-bold mb-6 text-indigo-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                <span>✍️</span> لوحة التحكم والبيانات
+            </h2>
+            
+            <form id="cvForm" class="space-y-5 custom-scrollbar max-h-[65vh] overflow-y-auto px-2" onsubmit="event.preventDefault();">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label id="lblName" class="block text-xs font-semibold text-slate-400 mb-1">الاسم الكامل</label>
+                        <input type="text" id="inputName" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                    </div>
+                    <div>
+                        <label id="lblTitle" class="block text-xs font-semibold text-slate-400 mb-1">المسمى الوظيفي</label>
+                        <input type="text" id="inputTitle" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label id="lblEmail" class="block text-xs font-semibold text-slate-400 mb-1">البريد الإلكتروني</label>
+                        <input type="email" id="inputEmail" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                    </div>
+                    <div>
+                        <label id="lblPhone" class="block text-xs font-semibold text-slate-400 mb-1">رقم الهاتف</label>
+                        <input type="tel" id="inputPhone" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label id="lblAbout" class="block text-xs font-semibold text-slate-400 mb-1">نبذة عنك</label>
+                    <textarea id="inputAbout" rows="2" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all"></textarea>
+                </div>
+
+                <div id="dynamicSections" class="space-y-4">
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60 relative">
+                        <label id="lblExp" class="block text-sm font-bold text-purple-400 mb-1">الخبرات المهنية</label>
+                        <textarea id="inputExperience" rows="2" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all"></textarea>
+                    </div>
+
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60 relative">
+                        <label id="lblEdu" class="block text-sm font-bold text-pink-400 mb-1">التعليم والشهادات</label>
+                        <textarea id="inputEducation" rows="2" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <label id="lblSkills" class="block text-xs font-semibold text-slate-400 mb-1">المهارات (افصل بينها بفاصلة ,)</label>
+                    <input type="text" id="inputSkills" class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all">
+                </div>
+
+                <div class="pt-2">
+                    <div class="flex gap-2">
+                        <input type="text" id="customSectionTitle" class="w-2/3 bg-slate-800 border border-dashed border-slate-600 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <button onclick="addNewSection()" id="btnAddSection" class="w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg transition-all cursor-pointer">
+                            ➕ إضافة قسم
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="mt-6 pt-4 border-t border-slate-800 grid grid-cols-2 gap-4">
+                <button onclick="downloadPDF()" id="btnSave" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all cursor-pointer text-center">
+                    💾 حفظ كـ PDF نقي
+                </button>
+                <button onclick="window.print()" id="btnPrint" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all cursor-pointer text-center">
+                    🖨️ طباعة ورقية مباشرة
+                </button>
+            </div>
+        </section>
+
+        <section class="animate__animated animate__fadeInRight lg:sticky lg:top-8">
+            <h2 id="sectionTitlePreview" class="text-xl font-bold mb-6 text-pink-400 flex items-center gap-2">
+                <span>👀</span> المعاينة الحية الحقيقية للورقة
+            </h2>
+            
+            <div class="bg-slate-800 p-2 rounded-2xl border border-slate-700 shadow-xl">
+                <div id="cvPreview" class="bg-white text-slate-800 p-8 min-h-[750px] flex flex-col justify-between relative overflow-hidden transition-all duration-300">
+                    
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10"></div>
+
+                    <div>
+                        <div class="border-b-2 border-slate-200 pb-5 mb-5">
+                            <h3 id="viewName" class="text-3xl font-bold text-slate-900"></h3>
+                            <p id="viewTitle" class="text-indigo-600 font-semibold mt-1 text-lg"></p>
+                            
+                            <div class="flex flex-wrap gap-4 text-xs text-slate-500 mt-3 font-medium">
+                                <span id="viewEmail"></span>
+                                <span id="viewPhone"></span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5">
+                            <div>
+                                <h4 id="vHeadAbout" class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5 border-r-4 border-indigo-500 pr-2"></h4>
+                                <p id="viewAbout" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line"></p>
+                            </div>
+
+                            <div id="previewDynamicContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div id="viewExperienceContainer">
+                                    <h4 id="vHeadExp" class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5 border-r-4 border-purple-500 pr-2"></h4>
+                                    <p id="viewExperience" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line"></p>
+                                </div>
+                                <div id="viewEducationContainer">
+                                    <h4 id="vHeadEdu" class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5 border-r-4 border-pink-500 pr-2"></h4>
+                                    <p id="viewEducation" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line"></p>
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <h4 id="vHeadSkills" class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-2 border-r-4 border-emerald-500 pr-2"></h4>
+                                <div id="viewSkills" class="flex flex-wrap gap-1.5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="vFooter" class="mt-8 pt-4 border-t border-slate-100 text-center text-xs text-slate-400 font-light"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center text-slate-500 text-xs mt-8">
+        صانع السير الذاتية الذكي © 2026
+    </footer>
+
+    <script>
+        // قاموس اللغات الـ 6 المتكامل مع ترجمة كاملة للأمثلة والقيم الافتراضية لكل خانة
+        const translations = {
+            ar: {
+                dir: "rtl",
+                lblSelectLang: "اختر لغة النظام والـ CV:",
+                mainTitle: "صانع السير الذاتية المطور",
+                mainSub: "تغيير كامل للمحتوى والأمثلة المقترحة لـ 6 لغات عالمية فوراً",
+                sectionTitleForm: "✍️ لوحة التحكم والبيانات",
+                sectionTitlePreview: "👀 المعاينة الحية الحقيقية للورقة",
+                lblName: "الاسم الكامل",
+                lblTitle: "المسمى الوظيفي",
+                lblEmail: "البريد الإلكتروني",
+                lblPhone: "رقم الهاتف",
+                lblAbout: "نبذة عنك",
+                lblExp: "الخبرات المهنية",
+                lblEdu: "التعليم والشهادات",
+                lblSkills: "المهارات (افصل بينها بفاصلة ,)",
+                btnAddSection: "➕ إضافة قسم",
+                btnSave: "💾 حفظ كـ PDF نقي",
+                btnPrint: "🖨️ طباعة ورقية مباشرة",
+                vHeadAbout: "نبذة تعريفية",
+                vHeadExp: "الخبرات المهنية",
+                vHeadEdu: "التعليم والشهادات",
+                vHeadSkills: "المهارات الشخصية والتقنية",
+                vFooter: "تم إنشاء السيرة الذاتية بواسطة صانع السير الذاتية المحترف",
+                placeholderCustom: "اسم قسم جديد",
+                // أمثلة مقترحة افتراضية
+                valName: "أحمد محمد",
+                valTitle: "مطور ويب / مصمم جرافيك",
+                valEmail: "example@mail.com",
+                valPhone: "+966 5000000",
+                valAbout: "اكتب نبذة مختصرة عن مهاراتك وشغفك وما يمكنك تقديمه للشركات.",
+                valExp: "• شركة X - مطور برمجيات (2023 - الآن)\n• تطوير واجهات تفاعلية وتحسين الأداء.",
+                valEdu: "• بكالوريوس علوم حاسب - جامعة الملك سعود\n• شهادة احترافية في هندسة البرمجيات.",
+                valSkills: "HTML, CSS, JavaScript, Git, تواصل فعال"
+            },
+            en: {
+                dir: "ltr",
+                lblSelectLang: "Select Language for App & CV:",
+                mainTitle: "Professional CV Builder",
+                mainSub: "Instantly change all UI elements & sample texts across 6 world languages",
+                sectionTitleForm: "✍️ Control Panel & Data",
+                sectionTitlePreview: "👀 Live Document Preview",
+                lblName: "Full Name",
+                lblTitle: "Job Title",
+                lblEmail: "Email Address",
+                lblPhone: "Phone Number",
+                lblAbout: "About Me",
+                lblExp: "Professional Experience",
+                lblEdu: "Education & Qualifications",
+                lblSkills: "Skills (Separate with commas ,)",
+                btnAddSection: "➕ Add Section",
+                btnSave: "💾 Save as Clean PDF",
+                btnPrint: "🖨️ Direct Paper Print",
+                vHeadAbout: "Professional Summary",
+                vHeadExp: "Work Experience",
+                vHeadEdu: "Education & Qualifications",
+                vHeadSkills: "Key Skills & Core Competencies",
+                vFooter: "Resume generated via Professional CV Builder",
+                placeholderCustom: "New Section Name",
+                // Dynamic Examples
+                valName: "John Doe",
+                valTitle: "Full Stack Developer / UI/UX Designer",
+                valEmail: "john.doe@example.com",
+                valPhone: "+1 555-0199",
+                valAbout: "Result-driven software professional with 3+ years of experience building high-performance web applications and sleek digital experiences.",
+                valExp: "• TechCorp Inc. - Senior Developer (2023 - Present)\n• Led a team of 4 engineers to rebuild the core analytics dashboard.\n• Company Y - Junior Developer (2021 - 2023)",
+                valEdu: "• B.S. in Computer Science - University of California\n• Certified Scrum Master (CSM)",
+                valSkills: "HTML, CSS, JavaScript, React, Node.js, Git, Problem Solving"
+            },
+            fr: {
+                dir: "ltr",
+                lblSelectLang: "Sélectionnez la langue de l'application et du CV:",
+                mainTitle: "Générateur de CV Professionnel",
+                mainSub: "Changez instantanément l'interface et les exemples suggérés en 6 langues",
+                sectionTitleForm: "✍️ Panneau de Contrôle & Données",
+                sectionTitlePreview: "👀 Aperçu en Direct du Document",
+                lblName: "Nom Complet",
+                lblTitle: "Titre du Poste",
+                lblEmail: "Adresse E-mail",
+                lblPhone: "Numéro de Téléphone",
+                lblAbout: "À Propos de Moi",
+                lblExp: "Expérience Professionnelle",
+                lblEdu: "Éducation & Diplômes",
+                lblSkills: "Compétences (Séparer par des virgules ,)",
+                btnAddSection: "➕ Ajouter une Section",
+                btnSave: "💾 Enregistrer en PDF Pro",
+                btnPrint: "🖨️ Impression Directe",
+                vHeadAbout: "Résumé Professionnel",
+                vHeadExp: "Expérience Professionnelle",
+                vHeadEdu: "Éducation & Formation",
+                vHeadSkills: "Compétences Clés",
+                vFooter: "Mon CV généré via le générateur de CV professionnel",
+                placeholderCustom: "Nom de la nouvelle section",
+                // Dynamic Examples
+                valName: "Jean Dupont",
+                valTitle: "Développeur Web / Designer Graphique",
+                valEmail: "jean.dupont@example.com",
+                valPhone: "+33 1 42 27 78 00",
+                valAbout: "Professionnel du web passionné, spécialisé dans la création d'applications modernes, d'interfaces esthétiques et l'optimisation des performances.",
+                valExp: "• Tech Solution - Développeur Web (2023 - Présent)\n• Conception d'applications e-commerce modernes.\n• Agence Web X - Stagiaire (2022)",
+                valEdu: "• Master en Informatique - Université de Paris\n• Certification UI/UX Avancée",
+                valSkills: "HTML, CSS, JavaScript, React, PHP, UI/UX, Travail d'équipe"
+            },
+            de: {
+                dir: "ltr",
+                lblSelectLang: "Wählen Sie die Sprache für App & Lebenslauf:",
+                mainTitle: "Professioneller Lebenslauf-Ersteller",
+                mainSub: "Ändern Sie sofort die Benutzeroberfläche und Beispiele in 6 Sprachen",
+                sectionTitleForm: "✍️ Kontrollzentrum & Daten",
+                sectionTitlePreview: "👀 Live-Dokumentenvorschau",
+                lblName: "Vollständiger Name",
+                lblTitle: "Berufsbezeichnung",
+                lblEmail: "E-Mail-Adresse",
+                lblPhone: "Telefonnummer",
+                lblAbout: "Über mich",
+                lblExp: "Berufserfahrung",
+                lblEdu: "Ausbildung & Qualifikationen",
+                lblSkills: "Fähigkeiten (Mit Komma trennen ,)",
+                btnAddSection: "➕ Bereich hinzufügen",
+                btnSave: "💾 Als sauberes PDF speichern",
+                btnPrint: "🖨️ Direktdruck auf Papier",
+                vHeadAbout: "Berufliches Profil",
+                vHeadExp: "Berufserfahrung",
+                vHeadEdu: "Ausbildung & Studium",
+                vHeadSkills: "Schlüsselkompetenzen",
+                vFooter: "Lebenslauf erstellt mit dem professionellen Lebenslauf-Ersteller",
+                placeholderCustom: "Neuer Bereichsname",
+                // Dynamic Examples
+                valName: "Max Mustermann",
+                valTitle: "Webentwickler / UI-Designer",
+                valEmail: "max.mustermann@example.de",
+                valPhone: "+49 30 1234567",
+                valAbout: "Zielorientierter Webentwickler mit fundierter Erfahrung in der Erstellung responsiver und benutzerfreundlicher Webanwendungen.",
+                valExp: "• Software GmbH - Full-Stack-Entwickler (2023 - Heute)\n• Optimierung der Ladezeiten um 40%.\n• WebAgentur Berlin - Webentwickler (2021 - 2023)",
+                valEdu: "• B.Sc. in Angewandter Informatik - TU München\n• Zertifikat in Agilem Projektmanagement",
+                valSkills: "HTML, CSS, JavaScript, Angular, Git, Projektmanagement"
+            },
+            es: {
+                dir: "ltr",
+                lblSelectLang: "Seleccione el idioma para la aplicación y el CV:",
+                mainTitle: "Creador de CV Profesional",
+                mainSub: "Cambie instantáneamente la interfaz y los ejemplos sugeridos a 6 idiomas",
+                sectionTitleForm: "✍️ Panel de Control y Datos",
+                sectionTitlePreview: "👀 Vista Previa del Documento",
+                lblName: "Nombre Completo",
+                lblTitle: "Título Profesional",
+                lblEmail: "Correo Electrónico",
+                lblPhone: "Número de Teléfono",
+                lblAbout: "Sobre Mí",
+                lblExp: "Experiencia Profesional",
+                lblEdu: "Educación y Certificaciones",
+                lblSkills: "Habilidades (Separar con comas ,)",
+                btnAddSection: "➕ Añadir Sección",
+                btnSave: "💾 Guardar como PDF Limpio",
+                btnPrint: "🖨️ Impresión Directa",
+                vHeadAbout: "Resumen Profesional",
+                vHeadExp: "Experiencia Laboral",
+                vHeadEdu: "Educación y Formación",
+                vHeadSkills: "Habilidades Clave",
+                vFooter: "Currículum generado mediante el Creador de CV Profesional",
+                placeholderCustom: "Nombre de nueva sección",
+                // Dynamic Examples
+                valName: "Carlos Gómez",
+                valTitle: "Desarrollador Web / Diseñador UX",
+                valEmail: "carlos.gomez@example.com",
+                valPhone: "+34 91 123 4567",
+                valAbout: "Desarrollador web creativo y analítico enfocado en construir experiencias digitales excepcionales, dinámicas y altamente escalables.",
+                valExp: "• Innova Tech - Desarrollador Frontend (2023 - Presente)\n• Creación de interfaces fluidas utilizando React.\n• Soluciones Web S.A. - Desarrollador (2021 - 2023)",
+                valEdu: "• Grado en Ingeniería Informática - Universidad de Madrid\n• Certificación en Diseño de Experiencia de Usuario",
+                valSkills: "HTML, CSS, JavaScript, Vue.js, Git, Diseño UX, Creatividad"
+            },
+            it: {
+                dir: "ltr",
+                lblSelectLang: "Seleziona la lingua per l'app e il CV:",
+                mainTitle: "Creatore di CV Professionale",
+                mainSub: "Cambia istantaneamente l'interfaccia e gli esempi suggeriti in 6 lingue",
+                sectionTitleForm: "✍️ Pannello di Controllo & Dati",
+                sectionTitlePreview: "👀 Anteprima in Tempo Reale",
+                lblName: "Nome Completo",
+                lblTitle: "Qualifica Professionale",
+                lblEmail: "Indirizzo Email",
+                lblPhone: "Numero di Telefono",
+                lblAbout: "Su di Me",
+                lblExp: "Esperienza Professionale",
+                lblEdu: "Istruzione e Certificazioni",
+                lblSkills: "Competenze (Separare con virgole ,)",
+                btnAddSection: "➕ Aggiungi Sezione",
+                btnSave: "💾 Salva come PDF Pulito",
+                btnPrint: "🖨️ Stampa Diretta su Carta",
+                vHeadAbout: "Profilo Professionale",
+                vHeadExp: "Esperienza Lavorativa",
+                vHeadEdu: "Istruzione e Formazione",
+                vHeadSkills: "Competenze Chiave",
+                vFooter: "Curriculum generato tramite il Creatore di CV Professionale",
+                placeholderCustom: "Nome nuova sezione",
+                // Dynamic Examples
+                valName: "Giovanni Rossi",
+                valTitle: "Sviluppatore Web / UI Designer",
+                valEmail: "giovanni.rossi@example.com",
+                valPhone: "+39 02 1234567",
+                valAbout: "Sviluppatore software orientato ai risultati, specializzato nella creazione di interfacce web moderne, veloci e centrate sull'utente.",
+                valExp: "• Sviluppo Digitale S.R.L. - Web Developer (2023 - Presente)\n• Sviluppo e ottimizzazione di portali aziendali ad alto traffico.\n• Studio Web Milano - Junior Dev (2021 - 2023)",
+                valEdu: "• Laurea in Informatica - Politecnico di Milano\n• Certificazione Professionale Scrum",
+                valSkills: "HTML, CSS, JavaScript, React, Node.js, Git, Problem Solving"
+            }
+        };
+
+        let currentLang = 'ar';
+
+        // دالة تغيير اللغة الشاملة التي تقوم بتحديث الواجهات والأمثلة داخل المربعات فورياً
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const data = translations[lang];
+            
+            // 1. تحديث اتجاه لغة الصفحة (RTL أو LTR)
+            const htmlTag = document.getElementById('htmlTag');
+            htmlTag.setAttribute('dir', data.dir);
+            htmlTag.setAttribute('lang', lang);
+
+            // 2. تحديث نصوص واجهة البرنامج الثابتة
+            for (let key in data) {
+                const el = document.getElementById(key);
+                if (el && !key.startsWith('val')) {
+                    el.innerText = data[key];
+                }
+            }
+            
+            document.getElementById('customSectionTitle').placeholder = data.placeholderCustom;
+
+            // 3. التحديث الذكي والحي لقيم مربعات الإدخال بالأمثلة الجديدة للغة المختارة
+            document.getElementById('inputName').value = data.valName;
+            document.getElementById('inputTitle').value = data.valTitle;
+            document.getElementById('inputEmail').value = data.valEmail;
+            document.getElementById('inputPhone').value = data.valPhone;
+            document.getElementById('inputAbout').value = data.valAbout;
+            document.getElementById('inputExperience').value = data.valExp;
+            document.getElementById('inputEducation').value = data.valEdu;
+            document.getElementById('inputSkills').value = data.valSkills;
+
+            // محاذاة النص التلقائي حسب لغة الإدخال المعتمدة
+            const allInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+            allInputs.forEach(input => {
+                input.style.textAlign = data.dir === 'rtl' ? 'right' : 'left';
+            });
+
+            // 4. تحديث ورقة المعاينة الحية فوراً لتعكس القيم الجديدة للغة المحددة
+            updateAllPreviews();
+
+            // 5. تمييز الزر النشط للغة بلمسة بصرية نيون ساحرة
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.className = "bg-slate-800 text-slate-400 font-medium py-1.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-700 transition-all cursor-pointer lang-btn";
+            });
+            const activeBtn = document.getElementById(`btn-${lang}`);
+            if (activeBtn) {
+                activeBtn.className = "bg-indigo-600 text-white font-medium py-1.5 px-4 rounded-xl border border-indigo-500 shadow-lg shadow-indigo-500/20 transition-all cursor-pointer lang-btn";
+            }
+        }
+
+        // دالة لنقل البيانات من لوحة الإدخال إلى ورقة المعاينة الـ CV
+        function updateAllPreviews() {
+            document.getElementById('viewName').innerText = document.getElementById('inputName').value;
+            document.getElementById('viewTitle').innerText = document.getElementById('inputTitle').value;
+            document.getElementById('viewEmail').innerText = "📧 " + document.getElementById('inputEmail').value;
+            document.getElementById('viewPhone').innerText = "📞 " + document.getElementById('inputPhone').value;
+            document.getElementById('viewAbout').innerText = document.getElementById('inputAbout').value;
+            document.getElementById('viewExperience').innerText = document.getElementById('inputExperience').value;
+            document.getElementById('viewEducation').innerText = document.getElementById('inputEducation').value;
+            
+            updateSkillsBadges();
+        }
+
+        // كبسولات المهارات التفاعلية
+        function updateSkillsBadges() {
+            const viewSkills = document.getElementById('viewSkills');
+            const skillsVal = document.getElementById('inputSkills').value;
+            const skillsArray = skillsVal.split(',').map(s => s.trim()).filter(s => s !== '');
+            
+            viewSkills.innerHTML = '';
+            skillsArray.forEach(skill => {
+                const span = document.createElement('span');
+                span.className = 'bg-slate-100 text-slate-700 text-xs px-2.5 py-1 rounded font-medium animate__animated animate__fadeIn';
+                span.innerText = skill;
+                viewSkills.appendChild(span);
+            });
+        }
+
+        // مستمعو الأحداث لتحديث المعاينة بشكل حي عند كتابة المستخدم
+        const baseFields = ['inputName', 'inputTitle', 'inputEmail', 'inputPhone', 'inputAbout', 'inputExperience', 'inputEducation'];
+        baseFields.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateAllPreviews);
+        });
+        document.getElementById('inputSkills').addEventListener('input', updateSkillsBadges);
+
+        // تشغيل التطبيق باللغة العربية كـ لغة افتراضية مع جلب أمثلتها فوراً عند فتح الموقع لأول مرة
+        changeLanguage('ar');
+
+        // إضافة قسم مخصص بشكل ديناميكي كامل ومتعدد اللغات
+        let customSectionCount = 0;
+        function addNewSection() {
+            const titleInput = document.getElementById('customSectionTitle');
+            const title = titleInput.value.trim();
+            
+            if (!title) {
+                const alertMsg = currentLang === 'ar' ? 'الرجاء كتابة اسم للقسم الجديد أولاً!' : 'Please enter a section name first!';
+                alert(alertMsg);
+                return;
+            }
+
+            customSectionCount++;
+            const sectionId = `custom_sec_${customSectionCount}`;
+
+            const formContainer = document.getElementById('dynamicSections');
+            const newFormGroup = document.createElement('div');
+            newFormGroup.className = 'bg-slate-800/40 p-4 rounded-xl border border-indigo-900/40 relative animate__animated animate__fadeInUp';
+            newFormGroup.id = `form_group_${sectionId}`;
+            newFormGroup.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block text-sm font-bold text-indigo-400">${title}</label>
+                    <button onclick="removeSection('${sectionId}')" class="text-xs text-red-400 hover:text-red-500 cursor-pointer">❌</button>
+                </div>
+                <textarea id="input_${sectionId}" rows="2" placeholder="..." class="w-full bg-slate-800/80 border border-slate-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500 transition-all"></textarea>
+            `;
+            formContainer.appendChild(newFormGroup);
+
+            const previewContainer = document.getElementById('previewDynamicContainer');
+            const newPreviewGroup = document.createElement('div');
+            newPreviewGroup.id = `preview_group_${sectionId}`;
+            newPreviewGroup.className = 'animate__animated animate__fadeIn';
+            newPreviewGroup.innerHTML = `
+                <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5 border-r-4 border-indigo-500 pr-2">${title}</h4>
+                <p id="view_${sectionId}" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">• ...</p>
+            `;
+            previewContainer.appendChild(newPreviewGroup);
+
+            const newInput = document.getElementById(`input_${sectionId}`);
+            const newView = document.getElementById(`view_${sectionId}`);
+            
+            newInput.addEventListener('input', () => {
+                newView.innerText = newInput.value.trim() === '' ? `• ...` : newInput.value;
+            });
+
+            titleInput.value = '';
+        }
+
+        function removeSection(id) {
+            document.getElementById(`form_group_${id}`)?.remove();
+            document.getElementById(`preview_group_${id}`)?.remove();
+        }
+
+        // حفظ كـ PDF نقي
+        function downloadPDF() {
+            const element = document.getElementById('cvPreview');
+            const opt = {
+                margin:       0,
+                filename:     currentLang === 'ar' ? 'السيرة_الذاتية.pdf' : 'CV_Global.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
